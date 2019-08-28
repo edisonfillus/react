@@ -1,7 +1,42 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
+import $ from 'jquery';
 
-class App extends Component {
+class App extends React.Component {
+
+  state = {
+    lista: [],
+  };
+
+
+  componentDidMount() {
+    this._asyncRequest = $.ajax({
+      url: "http://localhost:8080/api/autores",
+      dataType: 'json',
+      success: (resposta) => {
+        this._asyncRequest = null;
+        this.setState({ lista: resposta })
+      },
+      error: () => {
+        this._asyncRequest = null;
+        this.setState({
+          lista: [{
+            nome: 'fulano ',
+            email: 'fulano@teste.com.br',
+            senha: '1234'
+          }]
+        })
+
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this._asyncRequest) {
+      this._asyncRequest.abort();
+    }
+  }
+
   render() {
     return (
       <div id="layout">
@@ -55,10 +90,16 @@ class App extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Alberto</td>
-                    <td>alberto.souza@caelum.com.br</td>
-                  </tr>
+                  {
+                    this.state.lista.map((autor) => {
+                      return (
+                        <tr>
+                          <td>{autor.nome}</td>
+                          <td>{autor.email}</td>
+                        </tr>
+                      );
+                    })
+                  }
                 </tbody>
               </table>
             </div>
