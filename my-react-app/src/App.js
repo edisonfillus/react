@@ -1,34 +1,32 @@
 import React from 'react';
 import './App.css';
-import $ from 'jquery';
 
 class App extends React.Component {
 
   state = {
-    lista: [],
+    isLoading: true,
+    error: null,
+    autores: []
   };
 
 
   componentDidMount() {
-    this._asyncRequest = $.ajax({
-      url: "http://localhost:8080/api/autores",
-      dataType: 'json',
-      success: (resposta) => {
-        this._asyncRequest = null;
-        this.setState({ lista: resposta })
-      },
-      error: () => {
-        this._asyncRequest = null;
-        this.setState({
-          lista: [{
-            nome: 'fulano ',
-            email: 'fulano@teste.com.br',
-            senha: '1234'
-          }]
-        })
 
-      }
-    });
+    fetch('http://localhost:8000/api/autores')
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          autores: data,
+          isLoading: false,
+        })
+      })
+      .catch(error => {
+        this.setState({
+          error,
+          isLoading: false
+        })
+      });
+
   }
 
   componentWillUnmount() {
@@ -38,6 +36,7 @@ class App extends React.Component {
   }
 
   render() {
+    const { isLoading, autores, error } = this.state;
     return (
       <div id="layout">
         <a href="#menu" id="menuLink" className="menu-link">
@@ -59,6 +58,7 @@ class App extends React.Component {
           <div className="header">
             <h1>Cadastro de Autores</h1>
           </div>
+
           <div className="content" id="content">
             <div className="pure-form pure-form-aligned">
               <form className="pure-form pure-form-aligned">
@@ -82,26 +82,31 @@ class App extends React.Component {
 
             </div>
             <div>
-              <table className="pure-table">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    this.state.lista.map((autor) => {
-                      return (
-                        <tr>
-                          <td>{autor.nome}</td>
-                          <td>{autor.email}</td>
-                        </tr>
-                      );
-                    })
-                  }
-                </tbody>
-              </table>
+              {error ? <p>{error.message}</p> : null}
+              {isLoading ? (
+                <h3>Loading...</h3>
+              ) : (
+                  <table className="pure-table">
+                    <thead>
+                      <tr>
+                        <th>Nome</th>
+                        <th>email</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {autores.map(autor => {
+                        return (
+                          <tr>
+                            <td>{autor.nome}</td>
+                            <td>{autor.email}</td>
+                          </tr>
+                        );
+                      })
+                      }
+
+                    </tbody>
+                  </table>
+                )}
             </div>
           </div>
         </div>
