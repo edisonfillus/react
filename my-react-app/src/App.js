@@ -96,7 +96,7 @@ class App extends React.Component {
                     <tbody>
                       {autores.map(autor => {
                         return (
-                          <tr>
+                          <tr key={autor.id}>
                             <td>{autor.nome}</td>
                             <td>{autor.email}</td>
                           </tr>
