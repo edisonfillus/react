@@ -3,11 +3,15 @@ import './App.css';
 
 class App extends React.Component {
 
-  state = {
-    isLoading: true,
-    error: null,
-    autores: []
-  };
+  constructor(){
+    super();
+    this.state = {
+      isLoading: true,
+      error: null,
+      autores: []
+    };
+    this.createAutor = this.createAutor.bind(this);
+  }
 
 
   componentDidMount() {
@@ -33,6 +37,12 @@ class App extends React.Component {
     if (this._asyncRequest) {
       this._asyncRequest.abort();
     }
+  }
+
+  createAutor(evt){
+    evt.preventDefault();
+    console.log("data sent");
+    console.log(this);
   }
 
   render() {
@@ -61,7 +71,7 @@ class App extends React.Component {
 
           <div className="content" id="content">
             <div className="pure-form pure-form-aligned">
-              <form className="pure-form pure-form-aligned">
+              <form className="pure-form pure-form-aligned" onSubmit={this.createAutor}>
                 <div className="pure-control-group">
                   <label htmlFor="nome">Nome</label>
                   <input id="nome" type="text" name="nome" value="" />
