@@ -3,14 +3,26 @@ import './App.css';
 
 class App extends React.Component {
 
-  constructor(){
+  constructor() {
     super();
     this.state = {
       isLoading: true,
       error: null,
-      autores: []
+      autores: [],
+      autor: {}
     };
     this.createAutor = this.createAutor.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    var obj  = {autor:this.state.autor};
+    obj.autor[name] = value;
+    this.setState(obj)
+    console.log(this.state);
   }
 
 
@@ -34,15 +46,28 @@ class App extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this._asyncRequest) {
-      this._asyncRequest.abort();
-    }
   }
 
-  createAutor(evt){
+  createAutor(evt) {
     evt.preventDefault();
-    console.log("data sent");
-    console.log(this);
+    fetch('http://localhost:8000/api/autores', {
+      method: 'post',
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      },
+      body: JSON.stringify(this.state.autor)
+    }).then(data => {
+      this.setState({
+        autor: {},
+        autores: this.state.autores.push(data.json())
+      })
+    })
+      .catch(error => {
+        this.setState({
+          error
+        })
+      });
+
   }
 
   render() {
@@ -74,15 +99,15 @@ class App extends React.Component {
               <form className="pure-form pure-form-aligned" onSubmit={this.createAutor}>
                 <div className="pure-control-group">
                   <label htmlFor="nome">Nome</label>
-                  <input id="nome" type="text" name="nome" value="" />
+                  <input id="nome" type="text" name="nome" value={this.state.autor.nome} onChange={this.handleInputChange} />
                 </div>
                 <div className="pure-control-group">
                   <label htmlFor="email">Email</label>
-                  <input id="email" type="email" name="email" value="" />
+                  <input id="email" type="email" name="email" value={this.state.autor.email} onChange={this.handleInputChange}  />
                 </div>
                 <div className="pure-control-group">
                   <label htmlFor="senha">Senha</label>
-                  <input id="senha" type="password" name="senha" />
+                  <input id="senha" type="password" name="senha" value={this.state.autor.senha} onChange={this.handleInputChange}  />
                 </div>
                 <div className="pure-control-group">
                   <label></label>

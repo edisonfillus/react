@@ -30,8 +30,13 @@ app.use((req, resp, next) => {
 });
 
 // API Routes
-app.get('/api/autores', autores.list);
-
+app.route('/api/autores')
+  .get(autores.list)
+  .post(autores.create);
+app.route('/api/autores/:id')
+  .get(autores.find)
+  .put(autores.update)
+  .delete(autores.delete)
 
 // Start the server
 app.listen('8000', () => {

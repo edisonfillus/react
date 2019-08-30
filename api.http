@@ -1,0 +1,32 @@
+### List
+GET http://localhost:8000/api/autores
+
+### Create
+POST http://localhost:8000/api/autores
+Content-Type: application/json
+
+{
+    "id": 2,
+    "nome": "beltrano",
+    "email": "beltrano@teste.com.br",
+    "senha": "4321"
+}
+
+### Find
+GET http://localhost:8000/api/autores/1
+
+
+### Update
+PUT http://localhost:8000/api/autores/2
+Content-Type: application/json
+
+{
+    "id": 2,
+    "nome": "ciclano",
+    "email": "ciclano@teste.com.br",
+    "senha": "1243"
+}
+
+
+### Delete
+DELETE http://localhost:8000/api/autores/2
