@@ -57,10 +57,12 @@ class App extends React.Component {
       },
       body: JSON.stringify(this.state.autor)
     }).then(data => {
-      this.setState({
-        autor: {},
-        autores: this.state.autores.push(data.json())
-      })
+      data.json().then(created => {
+        this.setState({
+          autor: {},
+          autores: this.state.autores.concat(created)
+        })
+      });
     })
       .catch(error => {
         this.setState({
@@ -71,7 +73,6 @@ class App extends React.Component {
   }
 
   render() {
-    const { isLoading, autores, error } = this.state;
     return (
       <div id="layout">
         <a href="#menu" id="menuLink" className="menu-link">
@@ -117,8 +118,8 @@ class App extends React.Component {
 
             </div>
             <div>
-              {error ? <p>{error.message}</p> : null}
-              {isLoading ? (
+              {this.state.error ? <p>{this.state.error.message}</p> : null}
+              {this.state.isLoading ? (
                 <h3>Loading...</h3>
               ) : (
                   <table className="pure-table">
@@ -129,7 +130,7 @@ class App extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {autores.map(autor => {
+                      {this.state.autores.map(autor => {
                         return (
                           <tr key={autor.id}>
                             <td>{autor.nome}</td>
