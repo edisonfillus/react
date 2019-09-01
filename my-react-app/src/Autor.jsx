@@ -10,12 +10,16 @@ class FormularioAutor extends Component {
 
   constructor() {
     super();
-    this.state = { autor: {} };
-    this.createAutor = this.createAutor.bind(this);
+    this.state = { autor: {
+      nome:"",
+      email: "",
+      senha: ""
+    } };
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.createAutor = this.createAutor.bind(this);
   }
 
-  handleInputChange(event) {
+  handleInputChange(event){
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -35,11 +39,13 @@ class FormularioAutor extends Component {
       body: JSON.stringify(this.state.autor)
     }).then(data => {
       data.json().then(created => {
-        this.setState({
-          autor: {}
-        })
+        this.setState({ autor: {
+          nome:"",
+          email: "",
+          senha: ""
+        } })
         PubSub.publish(TOPIC_AUTOR_CREATED, created);
-      });
+      })
     })
       .catch(error => {
         this.setState({
@@ -74,16 +80,17 @@ class TabelaAutores extends Component {
       isLoading: true,
       error: null,
     };
-
-    PubSub.subscribe(TOPIC_AUTOR_CREATED, function (msg, data) {
-      this.setState({ autores: this.state.autores.concat(data) });
-    }.bind(this));
+    this.abortController = new window.AbortController();
 
   }
 
   componentDidMount() {
 
-    fetch('http://localhost:8000/api/autores')
+    PubSub.subscribe(TOPIC_AUTOR_CREATED, function (msg, data) {
+      this.setState({ autores: this.state.autores.concat(data) });
+    }.bind(this));
+
+    fetch('http://localhost:8000/api/autores', {signal:this.abortController.signal})
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -98,6 +105,11 @@ class TabelaAutores extends Component {
         })
       });
 
+  }
+
+  componentWillUnmount() {
+    PubSub.unsubscribe(TOPIC_AUTOR_CREATED);
+    this.abortController.abort();
   }
 
   render() {

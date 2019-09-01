@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var autores = require('./api/autores')
+var livros = require('./api/livros')
 
 // Body parser to get data from post
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -37,6 +38,14 @@ app.route('/api/autores/:id')
   .get(autores.find)
   .put(autores.update)
   .delete(autores.delete)
+
+app.route('/api/livros')
+  .get(livros.list)
+  .post(livros.create);
+app.route('/api/livros/:id')
+  .get(livros.find)
+  .put(livros.update)
+  .delete(livros.delete)
 
 // Start the server
 app.listen('8000', () => {

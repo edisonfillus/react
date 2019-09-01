@@ -1,16 +1,20 @@
+var autores = require('./autores')
 
-var autores = [{
+var livros = [{
     id: 1,
-    nome: "fulano",
-    email: "fulano@teste.com.br",
-    senha: "1234"
+    autor: {id:1},
+    titulo: "React Easy",
+    preco: "35.00"
 }]
 var sequence = 1;
 
-exports.autores = autores;
-
 exports.list = function (req, res) {
-    res.json(autores);
+    let list = livros.map(livro => {
+        let autor = autores.autores.find(autor => autor.id == livro.autor.id);
+        livro.autor.nome = autor.nome;
+        return livro;
+    })
+    res.json(list);
 };
 
 exports.create = function (req, res) {
@@ -21,18 +25,18 @@ exports.create = function (req, res) {
         });
     }
 
-    let autor = req.body;
-    autor.id = ++sequence;
-    autores.push(autor);
-    res.json(autor);
+    let livro = req.body;
+    livro.id = ++sequence;
+    livros.push(livro);
+    res.json(livro);
 };
 
 exports.find = function (req, res) {
     let id = req.params.id;
-    let autor = autores.find(autor => autor.id == id);
-    console.log(autor);
-    if (autor) {
-        res.json(autor);
+    let livro = livros.find(livro => livro.id == id);
+    console.log(livro);
+    if (livro) {
+        res.json(livro);
     } else {
         res.status(404).send({
             message: "Not found with id " + req.params.id
@@ -49,10 +53,10 @@ exports.update = function (req, res) {
         });
     }
     let id = req.params.id;
-    let autor = autores.find(autor => autor.id == id);
-    if (autor) {
-        Object.assign(autor, req.body);
-        res.json(autor);
+    let livro = livros.find(livro => livro.id == id);
+    if (livro) {
+        Object.assign(livro, req.body);
+        res.json(livro);
     } else {
         res.status(404).send({
             message: "Not found with id " + req.params.id
@@ -62,9 +66,9 @@ exports.update = function (req, res) {
 
 exports.delete = function (req, res) {
     let id = req.params.id;
-    let autor = autores.find(autor => autor.id == id);
-    if (autor) {
-        autores = autores.filter(autor => autor.id != id);
+    let livro = livros.find(livro => livro.id == id);
+    if (livro) {
+        livros = livros.filter(livro => livro.id != id);
         res.status(204).send();
     } else {
         res.status(404).send({
