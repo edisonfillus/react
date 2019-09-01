@@ -1,76 +1,9 @@
 import React from 'react';
+import {FormularioAutor,TabelaAutores} from './Autor';
 import './App.css';
 
 class App extends React.Component {
 
-  constructor() {
-    super();
-    this.state = {
-      isLoading: true,
-      error: null,
-      autores: [],
-      autor: {}
-    };
-    this.createAutor = this.createAutor.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    var obj  = {autor:this.state.autor};
-    obj.autor[name] = value;
-    this.setState(obj)
-    console.log(this.state);
-  }
-
-
-  componentDidMount() {
-
-    fetch('http://localhost:8000/api/autores')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          autores: data,
-          isLoading: false,
-        })
-      })
-      .catch(error => {
-        this.setState({
-          error,
-          isLoading: false
-        })
-      });
-
-  }
-
-  componentWillUnmount() {
-  }
-
-  createAutor(evt) {
-    evt.preventDefault();
-    fetch('http://localhost:8000/api/autores', {
-      method: 'post',
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      },
-      body: JSON.stringify(this.state.autor)
-    }).then(data => {
-      data.json().then(created => {
-        this.setState({
-          autor: {},
-          autores: this.state.autores.concat(created)
-        })
-      });
-    })
-      .catch(error => {
-        this.setState({
-          error
-        })
-      });
-
-  }
 
   render() {
     return (
@@ -94,57 +27,11 @@ class App extends React.Component {
           <div className="header">
             <h1>Cadastro de Autores</h1>
           </div>
-
           <div className="content" id="content">
-            <div className="pure-form pure-form-aligned">
-              <form className="pure-form pure-form-aligned" onSubmit={this.createAutor}>
-                <div className="pure-control-group">
-                  <label htmlFor="nome">Nome</label>
-                  <input id="nome" type="text" name="nome" value={this.state.autor.nome} onChange={this.handleInputChange} />
-                </div>
-                <div className="pure-control-group">
-                  <label htmlFor="email">Email</label>
-                  <input id="email" type="email" name="email" value={this.state.autor.email} onChange={this.handleInputChange}  />
-                </div>
-                <div className="pure-control-group">
-                  <label htmlFor="senha">Senha</label>
-                  <input id="senha" type="password" name="senha" value={this.state.autor.senha} onChange={this.handleInputChange}  />
-                </div>
-                <div className="pure-control-group">
-                  <label></label>
-                  <button type="submit" className="pure-button pure-button-primary">Gravar</button>
-                </div>
-              </form>
-
-            </div>
-            <div>
-              {this.state.error ? <p>{this.state.error.message}</p> : null}
-              {this.state.isLoading ? (
-                <h3>Loading...</h3>
-              ) : (
-                  <table className="pure-table">
-                    <thead>
-                      <tr>
-                        <th>Nome</th>
-                        <th>email</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.state.autores.map(autor => {
-                        return (
-                          <tr key={autor.id}>
-                            <td>{autor.nome}</td>
-                            <td>{autor.email}</td>
-                          </tr>
-                        );
-                      })
-                      }
-
-                    </tbody>
-                  </table>
-                )}
-            </div>
+            <FormularioAutor/>
+            <TabelaAutores/>
           </div>
+
         </div>
 
       </div>
