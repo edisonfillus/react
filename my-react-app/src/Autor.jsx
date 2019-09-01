@@ -3,14 +3,14 @@ import CustomInput from './components/CustomInput';
 import CustomButton from './components/CustomButton';
 import PubSub from 'pubsub-js';
 
-export const TOPIC_AUTOR_CREATED = Symbol('topic_autor_created');
+const TOPIC_AUTOR_CREATED = Symbol('topic_autor_created');
 
 
-export class FormularioAutor extends Component {
+class FormularioAutor extends Component {
 
-  constructor(){
+  constructor() {
     super();
-    this.state = {autor:{}};
+    this.state = { autor: {} };
     this.createAutor = this.createAutor.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -38,7 +38,7 @@ export class FormularioAutor extends Component {
         this.setState({
           autor: {}
         })
-        PubSub.publish(TOPIC_AUTOR_CREATED,created);
+        PubSub.publish(TOPIC_AUTOR_CREATED, created);
       });
     })
       .catch(error => {
@@ -65,18 +65,18 @@ export class FormularioAutor extends Component {
   }
 }
 
-export class TabelaAutores extends Component {
+class TabelaAutores extends Component {
 
-  constructor(){
+  constructor() {
     super();
     this.state = {
-      autores:[],
+      autores: [],
       isLoading: true,
       error: null,
     };
 
-    PubSub.subscribe(TOPIC_AUTOR_CREATED,function (msg, data){
-      this.setState({autores: this.state.autores.concat(data)});
+    PubSub.subscribe(TOPIC_AUTOR_CREATED, function (msg, data) {
+      this.setState({ autores: this.state.autores.concat(data) });
     }.bind(this));
 
   }
@@ -132,4 +132,23 @@ export class TabelaAutores extends Component {
     );
   }
 }
+
+export default class AutorBox extends Component {
+
+  render() {
+    return (
+      <div>
+        <div className="header">
+          <h1>Cadastro de Autores</h1>
+        </div>
+        <div className="content" id="content">
+          <FormularioAutor />
+          <TabelaAutores />
+        </div>
+      </div>
+    );
+  }
+
+}
+
 
