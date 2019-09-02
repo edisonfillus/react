@@ -4,6 +4,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var autores = require('./api/autores')
 var livros = require('./api/livros')
+var fotos = require('./api/fotos')
 
 // Body parser to get data from post
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,6 +47,9 @@ app.route('/api/livros/:id')
   .get(livros.find)
   .put(livros.update)
   .delete(livros.delete)
+
+app.route('/api/fotos/:loginUsuario')
+  .get(fotos.findByLoginUsuario)
 
 // Start the server
 app.listen('8000', () => {
