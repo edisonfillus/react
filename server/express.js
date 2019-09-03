@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, '../', 'my-react-app/build')));
 // Cross Origin
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
   next();
 });
 
@@ -33,8 +33,29 @@ app.use((req, resp, next) => {
   next();
 });
 
+
 const protectedRouter = express.Router(); 
+
+protectedRouter.use((req, resp, next) => {
+  const now = new Date();
+  const time = `${now.toLocaleDateString()} - ${now.toLocaleTimeString()}`;
+  const path = `"${req.method} ${req.path}"`;
+  const m = `${req.ip} - ${time} - ${path}`;
+  console.log(m);
+  next();
+});
+
 protectedRouter.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  next();
+});
+
+protectedRouter.use((req, res, next) => {
+  if ('OPTIONS' == req.method) {
+    res.send(200);
+  }
   var token = req.headers['x-access-token'];
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
   jwt.verify(token, 'secret', function (err, decoded) {
@@ -45,19 +66,7 @@ protectedRouter.use((req, res, next) => {
       next();
   });
 });
-protectedRouter.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-protectedRouter.use((req, resp, next) => {
-  const now = new Date();
-  const time = `${now.toLocaleDateString()} - ${now.toLocaleTimeString()}`;
-  const path = `"${req.method} ${req.path}"`;
-  const m = `${req.ip} - ${time} - ${path}`;
-  console.log(m);
-  next();
-});
+
 
 
 // API Routes
@@ -80,7 +89,10 @@ app.route('/api/livros/:id')
 app.route('/api/login')
   .post(login.login)
 
-protectedRouter.get('/api/fotos',fotos.findByLoginUsuario)
+app.route('/api/fotos/:login')
+  .get(fotos.findByLoginUsuario)
+
+protectedRouter.get('/api/fotos',fotos.findUserFriends)
 
 app.use(protectedRouter);
 

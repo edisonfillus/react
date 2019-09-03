@@ -44,4 +44,8 @@ Content-Type: application/json
 
 ### Timeline
 GET http://localhost:8000/api/fotos
-x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InJhZmFlbCIsImlhdCI6MTU2NzUxNjY5NCwiZXhwIjoxNTY3NTIwMjk0fQ.4m4815TyuNsHA__VvE77E1U26WeGVD_JH_Qh6ESqexw
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InJhZmFlbCIsImlhdCI6MTU2NzUzMjM1OCwiZXhwIjoxNTY3NTM1OTU4fQ.hVVRWdG3lx2A23y218uscRyoRO90ksouwSiST9_QADc
+
+
+### Timeline Publica
+GET http://localhost:8000/api/fotos/rafael

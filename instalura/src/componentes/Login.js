@@ -12,17 +12,16 @@ export default class Login extends React.Component {
 
         const requestInfo = {
             method:'POST',
-            mode: 'cors',
             body:JSON.stringify({login:this.login.value,senha:this.senha.value}),
-            headers:new Headers({
+            headers:{
                 'Content-type' : 'application/json' 
-            })
+            }
         };
 
         fetch('http://localhost:8000/api/login',requestInfo)
             .then(response => {
                 if(response.ok) {
-                    return response.text();
+                    return response.json();
                 } else {
                     throw new Error('não foi possível fazer o login');
                 }
