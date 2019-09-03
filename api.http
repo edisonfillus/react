@@ -30,3 +30,18 @@ Content-Type: application/json
 
 ### Delete
 DELETE http://localhost:8000/api/autores/2
+
+
+### Login
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+    "login": "rafael",
+    "senha": "1234"
+}
+
+
+### Timeline
+GET http://localhost:8000/api/fotos
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InJhZmFlbCIsImlhdCI6MTU2NzUxNjY5NCwiZXhwIjoxNTY3NTIwMjk0fQ.4m4815TyuNsHA__VvE77E1U26WeGVD_JH_Qh6ESqexw

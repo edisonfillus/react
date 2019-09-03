@@ -5,6 +5,8 @@ var bodyParser = require('body-parser');
 var autores = require('./api/autores')
 var livros = require('./api/livros')
 var fotos = require('./api/fotos')
+var login = require('./api/login')
+var jwt = require('jsonwebtoken');
 
 // Body parser to get data from post
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,6 +33,33 @@ app.use((req, resp, next) => {
   next();
 });
 
+const protectedRouter = express.Router(); 
+protectedRouter.use((req, res, next) => {
+  var token = req.headers['x-access-token'];
+  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+  jwt.verify(token, 'secret', function (err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+
+      // se tudo estiver ok, salva no request para uso posterior
+      req.login = decoded.login;
+      next();
+  });
+});
+protectedRouter.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+protectedRouter.use((req, resp, next) => {
+  const now = new Date();
+  const time = `${now.toLocaleDateString()} - ${now.toLocaleTimeString()}`;
+  const path = `"${req.method} ${req.path}"`;
+  const m = `${req.ip} - ${time} - ${path}`;
+  console.log(m);
+  next();
+});
+
+
 // API Routes
 app.route('/api/autores')
   .get(autores.list)
@@ -48,8 +77,13 @@ app.route('/api/livros/:id')
   .put(livros.update)
   .delete(livros.delete)
 
-app.route('/api/fotos/:loginUsuario')
-  .get(fotos.findByLoginUsuario)
+app.route('/api/login')
+  .post(login.login)
+
+protectedRouter.get('/api/fotos',fotos.findByLoginUsuario)
+
+app.use(protectedRouter);
+
 
 // Start the server
 app.listen('8000', () => {

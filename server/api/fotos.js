@@ -17,20 +17,17 @@ var fotos = [
 exports.fotos = fotos;
 
 exports.findByLoginUsuario = function (req, res) {
-    let loginUsuario = req.params.loginUsuario;
-    let fotosLoginUsuario = fotos.filter(foto => foto.loginUsuario == loginUsuario);
+    
+    let login = req.login;
+    console.log(login);
+    let fotosLoginUsuario = fotos.filter(foto => foto.loginUsuario == login);
     if (fotosLoginUsuario) {
         res.json(fotosLoginUsuario);
     } else {
         res.status(404).send({
-            message: "Not found with id " + req.params.loginUsuario
+            message: "Not found with id " + req.params.login
         });
     }
 
 };
-
-
-
-
-
 

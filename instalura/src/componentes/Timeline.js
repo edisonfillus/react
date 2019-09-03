@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FotoItem from './Foto';
+import { get } from 'https';
 
 export default class Timeline extends Component {
   
@@ -9,7 +10,14 @@ export default class Timeline extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8000/api/fotos/rafael')
+     
+
+    fetch('http://localhost:8000/api/fotos',{
+      method: 'GET',
+      headers: {
+        "x-access-token": localStorage.getItem("auth-token")
+      }
+    })
       .then(response => response.json())
       .then(fotos => {
         this.setState({ fotos: fotos });
@@ -20,7 +28,7 @@ export default class Timeline extends Component {
     return (
       <div className="fotos container">
         {
-          this.state.fotos.map(foto => <FotoItem foto={foto} />)
+          this.state.fotos.map(foto => <FotoItem key={foto.id} foto={foto} />)
         }
       </div>
     );
