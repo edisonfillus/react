@@ -36,26 +36,17 @@ app.use((req, resp, next) => {
 
 const protectedRouter = express.Router(); 
 
-protectedRouter.use((req, resp, next) => {
-  const now = new Date();
-  const time = `${now.toLocaleDateString()} - ${now.toLocaleTimeString()}`;
-  const path = `"${req.method} ${req.path}"`;
-  const m = `${req.ip} - ${time} - ${path}`;
-  console.log(m);
-  next();
-});
-
 protectedRouter.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  if ('OPTIONS' == req.method) {
+    return res.sendStatus(200);
+  }
   next();
 });
 
 protectedRouter.use((req, res, next) => {
-  if ('OPTIONS' == req.method) {
-    res.send(200);
-  }
   var token = req.headers['x-access-token'];
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
   jwt.verify(token, 'secret', function (err, decoded) {
@@ -92,7 +83,8 @@ app.route('/api/login')
 app.route('/api/fotos/:login')
   .get(fotos.findByLoginUsuario)
 
-protectedRouter.get('/api/fotos',fotos.findUserFriends)
+protectedRouter.get('/api/fotos',fotos.findUserFriends);
+protectedRouter.post('/api/fotos/:id/like',fotos.likeFoto);
 
 app.use(protectedRouter);
 

@@ -3,7 +3,6 @@
         background: #fafafa;
       }
 
-
       .container {
         padding: 0 10%;
       }
@@ -23,7 +22,7 @@
         background: #fff;
         backface-visibility: hidden;
       }
-      
+
       .header-logo {
         background: url(../imgs/logo-instalura.svg) no-repeat left;
         height: 1em;
@@ -33,10 +32,10 @@
         transition: .4s;
       }
 
-      .header-logo:hover{
+      .header-logo:hover {
         filter: hue-rotate(0);
       }
-      
+
       .header-busca-campo {
         padding: .5em;
         margin-left: 1em;
@@ -44,7 +43,7 @@
         border: 1px solid #dbdbdb;
         color: #262626;
       }
-      
+
       .header-busca-campo:focus {
         background: #fff;
         outline: 1px solid #ccc;
@@ -75,14 +74,13 @@
         text-decoration: none;
         color: #069;
         font-size: 3em;
-      }    
+      }
 
-      .header-nav-item a:hover{
+      .header-nav-item a:hover {
         color: #5ad4c9;
       }
 
       /*******/
-
 
       .foto {
         background-color: #fff;
@@ -90,7 +88,6 @@
         border-radius: 3px;
         max-width: 550px;
         margin: 2em auto;
-        
       }
 
       .foto-header {
@@ -100,7 +97,6 @@
         padding: 0 2%;
       }
 
-
       .foto-usuario {
         display: flex;
         align-items: center;
@@ -108,19 +104,19 @@
         margin-left: 0;
         font-weight: bold;
       }
-      
+
       .foto-usuario a {
         text-decoration: none;
         color: #069;
       }
-      
-      .foto-usuario img{
+
+      .foto-usuario img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         margin-right: .7em;
       }
-      
+
       .foto-data {
         color: #999;
       }
@@ -130,7 +126,6 @@
       }
 
       /*****/
-
 
       .foto-info {
         padding: 1em;
@@ -153,7 +148,6 @@
       .foto-info-autor {
         font-weight: bold;
       }
-      
 
       .foto-info-comentarios {
         list-style: none;
@@ -167,9 +161,8 @@
         margin-bottom: .6em;
       }
 
-      
       /*****/
-      
+
       .fotoAtualizacoes {
         display: flex;
         padding: 0 1em 1em 1em;
@@ -185,12 +178,19 @@
         transition: .4s;
         margin-right: 1em;
       }
-      
-      .fotoAtualizacoes-like:hover {
-        background-image: url(../imgs/s2-check.png)
+
+      .fotoAtualizacoes-like-ativo {
+        background: url(../imgs/s2-check.png) no-repeat center center;
+        background-size: 32px 32px;
+        width: 44px;
+        height: 44px;
+        text-indent: -9999px;
+        display: inline-block;
+        transition: .4s;
+        margin-right: 1em;
       }
 
-      
+
       .fotoAtualizacoes-form {
         display: flex;
         width: 100%;
@@ -202,7 +202,7 @@
         outline: 0;
         width: 60%;
       }
-      
+
       .fotoAtualizacoes-form-submit {
         border: 0;
         background-color: #069;
