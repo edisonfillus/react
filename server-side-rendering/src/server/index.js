@@ -127,7 +127,6 @@ app.get("*", (req, res, next) => {
     return res.sendStatus(404);
   }
 
-
   const requestInitialData = 
     activeRoute.component.requestInitialData && activeRoute.component.requestInitialData();
 
